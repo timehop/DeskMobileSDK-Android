@@ -123,8 +123,6 @@ public class ContactUsViewTest {
 
         ContactUsView contactUsView = getNewContactUsView();
         contactUsView.setFormListener(mockFormListener);
-        getEmail(contactUsView).setText("valid@email.com");
-        getSubject(contactUsView).setText("Valid subject");
         getFeedback(contactUsView).setText("Valid feedback");
         verify(mockFormListener, atLeast(1)).onFormValid();
     }
@@ -155,8 +153,6 @@ public class ContactUsViewTest {
 
         ContactUsView contactUsView = getNewContactUsView();
         contactUsView.setFormListener(mockFormListener);
-        getEmail(contactUsView).setText("valid@email.com");
-        getSubject(contactUsView).setText("Valid subject");
         getFeedback(contactUsView).setText(""); // empty feedback
         verify(mockFormListener, atLeast(1)).onFormInvalid();
     }
@@ -173,50 +169,11 @@ public class ContactUsViewTest {
 
     // endregion
 
-    //region Hint Tests
-    @Test
-    @UiThreadTest
-    public void nameHintMatchesDefault() throws Exception {
-        assertThat(getName(contactUsView)).hasHint(getString(R.string.def_user_name_hint));
-    }
-
-    @Test
-    @UiThreadTest
-    public void emailHintMatchesDefault() throws Exception {
-        assertThat(getEmail(contactUsView)).hasHint(getString(R.string.def_user_email_hint));
-    }
-
-    @Test
-    @UiThreadTest
-    public void subjectHintMatchesDefault() throws Exception {
-        assertThat(getSubject(contactUsView)).hasHint(getString(R.string.def_subject_hint));
-    }
-
+    //region Hint Test
     @Test
     @UiThreadTest
     public void feedbackHintMatchesDefault() throws Exception {
         assertThat(getFeedback(contactUsView)).hasHint(getString(R.string.def_user_feedback_hint));
-    }
-
-    @Test
-    @UiThreadTest
-    public void nameHintMatchesValueFromLayoutAttrs() throws Exception {
-        ContactUsView contactUsView = inflateView(R.layout.contact_us_view_with_attributes);
-        assertThat(getName(contactUsView)).hasHint(getString(R.string.test_attr_name_hint));
-    }
-
-    @Test
-    @UiThreadTest
-    public void emailHintMatchesValueFromLayoutAttrs() throws Exception {
-        ContactUsView contactUsView = inflateView(R.layout.contact_us_view_with_attributes);
-        assertThat(getEmail(contactUsView)).hasHint(getString(R.string.test_attr_email_hint));
-    }
-
-    @Test
-    @UiThreadTest
-    public void subjectHintMatchesValueFromLayoutAttrs() throws Exception {
-        ContactUsView contactUsView = inflateView(R.layout.contact_us_view_with_attributes);
-        assertThat(getSubject(contactUsView)).hasHint(getString(R.string.test_attr_subject_hint));
     }
 
     @Test
@@ -228,202 +185,13 @@ public class ContactUsViewTest {
 
     @Test
     @UiThreadTest
-    public void nameHintMatchesValueFromStyle() throws Exception {
-        ContactUsView contactUsView = inflateView(R.layout.contact_us_view_with_style);
-        assertThat(getName(contactUsView)).hasHint(getString(R.string.test_style_name_hint));
-    }
-
-    @Test
-    @UiThreadTest
-    public void emailHintMatchesValueFromStyle() throws Exception {
-        ContactUsView contactUsView = inflateView(R.layout.contact_us_view_with_style);
-        assertThat(getEmail(contactUsView)).hasHint(getString(R.string.test_style_email_hint));
-    }
-
-    @Test
-    @UiThreadTest
-    public void subjectHintMatchesValueFromStyle() throws Exception {
-        ContactUsView contactUsView = inflateView(R.layout.contact_us_view_with_style);
-        assertThat(getSubject(contactUsView)).hasHint(getString(R.string.test_style_subject_hint));
-    }
-
-    @Test
-    @UiThreadTest
     public void feedbackHintMatchesValueFromStyle() throws Exception {
         ContactUsView contactUsView = inflateView(R.layout.contact_us_view_with_style);
         assertThat(getFeedback(contactUsView)).hasHint(getString(R.string.test_style_feedback_hint));
     }
     //endregion
 
-    // region Configuration tests
-
-    @Test
-    @UiThreadTest
-    public void userNameIsVisibleWhenEnabled() throws Exception {
-
-        // enable user name
-        Desk.with(context)
-                .setContactUsConfig(new BaseContactUsConfig(context) {
-                    @Override
-                    public boolean isUserNameEnabled() {
-                        return true;
-                    }
-                });
-
-        ContactUsView view = getNewContactUsView();
-        assertThat(getName(view)).isVisible();
-    }
-
-    @Test
-    @UiThreadTest
-    public void userNameIsGoneWhenDisabled() throws Exception {
-
-        // disable user name
-        Desk.with(context)
-                .setContactUsConfig(new BaseContactUsConfig(context) {
-                    @Override
-                    public boolean isUserNameEnabled() {
-                        return false;
-                    }
-                });
-
-        ContactUsView view = getNewContactUsView();
-        assertThat(getName(view)).isGone();
-    }
-
-    @Test
-    @UiThreadTest
-    public void userNameIsSetFromIdentity() throws Exception {
-        final String userName = "User Name";
-        Desk.with(context)
-                .setIdentity(new UserIdentity.Builder("email@email.com").name(userName).create());
-        ContactUsView contactUsView = getNewContactUsView();
-        assertThat(getName(contactUsView)).hasTextString(userName);
-    }
-
-    @Test
-    @UiThreadTest
-    public void emailIsGoneWhenPopulated() throws Exception {
-
-        // populate email
-        Desk.with(context)
-                .setIdentity(new UserIdentity.Builder("test@test.com").create());
-
-        ContactUsView view = getNewContactUsView();
-        assertThat(getEmail(view)).isGone();
-    }
-
-    @Test
-    @UiThreadTest
-    public void subjectIsVisibleWhenEnabled() throws Exception {
-
-        // enable subject
-        Desk.with(context)
-                .setContactUsConfig(new BaseContactUsConfig(context) {
-                    @Override
-                    public boolean isSubjectEnabled() {
-                        return true;
-                    }
-                });
-
-        ContactUsView view = getNewContactUsView();
-        assertThat(getSubject(view)).isVisible();
-    }
-
-    @Test
-    @UiThreadTest
-    public void subjectIsGoneWhenDisabled() throws Exception {
-
-        // disable subject
-        Desk.with(context)
-                .setContactUsConfig(new BaseContactUsConfig(context) {
-                    @Override
-                    public boolean isSubjectEnabled() {
-                        return false;
-                    }
-                });
-
-        ContactUsView view = getNewContactUsView();
-        assertThat(getSubject(view)).isGone();
-    }
-
-    @Test
-    @UiThreadTest
-    public void subjectIsSetFromContactUsConfiguration() throws Exception {
-        final String subject = "This is our subject";
-        Desk.with(context)
-                .setContactUsConfig(new BaseContactUsConfig(context) {
-                    @Override public String getSubject() {
-                        return subject;
-                    }
-                });
-        ContactUsView contactUsView = getNewContactUsView();
-        assertThat(getSubject(contactUsView)).hasTextString(subject);
-    }
-
-    // endregion
-
     // region Focus Tests
-
-    @Test
-    @UiThreadTest
-    public void userNameHasFocusWhenEmptyAndEnabled() throws Exception {
-        Desk.with(context)
-                .setContactUsConfig(new BaseContactUsConfig(context) {
-                    @Override public boolean isUserNameEnabled() {
-                        return true;
-                    }
-                });
-        EditText userName = (EditText) getName(getNewContactUsView());
-        assertThat(userName).isVisible();
-        assertThat(userName).isEmpty();
-        assertThat(userName).hasFocus();
-    }
-
-    @Test
-    @UiThreadTest
-    public void userEmailHasFocusWhenEmptyAndEnabled() throws Exception {
-        Desk.with(context)
-                .setContactUsConfig(new BaseContactUsConfig(context) {
-
-                    // disable user name so email is first visible field
-                    @Override public boolean isUserNameEnabled() {
-                        return false;
-                    }
-                });
-        EditText userEmail = (EditText) getEmail(getNewContactUsView());
-        assertThat(userEmail).isVisible();
-        assertThat(userEmail).isEmpty();
-        assertThat(userEmail).hasFocus();
-    }
-
-    @Test
-    @UiThreadTest
-    public void userSubjectHasFocusWhenEmptyAndEnabled() throws Exception {
-        Desk.with(context)
-
-                // set identity so email is populated
-                .setIdentity(new UserIdentity.Builder("email@email.com").create())
-                .setContactUsConfig(new BaseContactUsConfig(context) {
-
-                    // disable user name so subject is first visible field
-                    @Override public boolean isUserNameEnabled() {
-                        return false;
-                    }
-
-                    @Override public String getSubject() {
-                        return null;
-                    }
-
-                    @Override public boolean isSubjectEnabled() {
-                        return true;
-                    }
-                });
-        EditText userSubject = (EditText) getSubject(getNewContactUsView());
-        assertThat(userSubject).isVisible();
-        assertThat(userSubject).isEmpty();
-        assertThat(userSubject).hasFocus();
-    }
 
     @Test
     @UiThreadTest
@@ -466,9 +234,7 @@ public class ContactUsViewTest {
         clearIdentity();
 
         ContactUsView contactUsView = getNewContactUsView();
-        getSubject(contactUsView).setText("Subject");
         getFeedback(contactUsView).setText("Feedback");
-        getEmail(contactUsView).setText("");
         assertFalse(contactUsView.isFormValid());
     }
 
@@ -480,9 +246,7 @@ public class ContactUsViewTest {
         clearIdentity();
 
         ContactUsView contactUsView = getNewContactUsView();
-        getSubject(contactUsView).setText("Subject");
         getFeedback(contactUsView).setText("Feedback");
-        getEmail(contactUsView).setText("asdfasfsdafa");
         assertFalse(contactUsView.isFormValid());
     }
 
@@ -499,7 +263,6 @@ public class ContactUsViewTest {
 
         ContactUsView contactUsView = getNewContactUsView();
         getFeedback(contactUsView).setText("Feedback");
-        getEmail(contactUsView).setText("valid@email.com");
         assertFalse(contactUsView.isFormValid());
     }
 
@@ -515,8 +278,6 @@ public class ContactUsViewTest {
                 });
 
         ContactUsView contactUsView = getNewContactUsView();
-        getSubject(contactUsView).setText("Subject");
-        getEmail(contactUsView).setText("valid@email.com");
         getFeedback(contactUsView).setText("");
         assertFalse(contactUsView.isFormValid());
     }
@@ -537,9 +298,7 @@ public class ContactUsViewTest {
                 });
 
         ContactUsView contactUsView = getNewContactUsView();
-        getSubject(contactUsView).setText("Subject");
         getFeedback(contactUsView).setText("Feedback");
-        getEmail(contactUsView).setText("valid@email.com");
         assertTrue(contactUsView.isFormValid());
     }
 
@@ -598,18 +357,6 @@ public class ContactUsViewTest {
     }
 
     // endregion
-
-    private TextView getName(ContactUsView contactUsView) {
-        return (TextView) contactUsView.findViewById(R.id.user_name);
-    }
-
-    private TextView getEmail(ContactUsView contactUsView) {
-        return (TextView) contactUsView.findViewById(R.id.user_email);
-    }
-
-    private TextView getSubject(ContactUsView contactUsView) {
-        return (TextView) contactUsView.findViewById(R.id.user_subject);
-    }
 
     private TextView getFeedback(ContactUsView contactUsView) {
         return (TextView) contactUsView.findViewById(R.id.user_feedback);

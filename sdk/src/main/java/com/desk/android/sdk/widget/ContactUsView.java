@@ -33,7 +33,6 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Patterns;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -75,27 +74,16 @@ public class ContactUsView extends LinearLayout {
          */
         void onFormInvalid();
     }
-
-    private EditText mUserName;
-    private EditText mUserEmail;
-    private EditText mUserSubject;
     private EditText mUserFeedback;
 
     private String mName;
     private String mEmail;
     private String mSubject;
     private String mFeedback;
-
-    private String mNameHint;
-    private String mEmailHint;
-    private String mSubjectHint;
     private String mFeedbackHint;
 
     private int mBrandId;
     private boolean mIsBranded;
-
-    private boolean mUserNameEnabled;
-    private boolean mUserSubjectEnabled;
 
     private HashMap<String, CustomFieldProperties> mCustomFieldProperties;
 
@@ -112,9 +100,6 @@ public class ContactUsView extends LinearLayout {
     public ContactUsView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         TypedArray ta = context.getTheme().obtainStyledAttributes(attrs, R.styleable.ContactUsView, defStyleAttr, R.style.ContactUsViewStyle);
-        mNameHint = ta.getString(R.styleable.ContactUsView_dk_nameHint);
-        mEmailHint = ta.getString(R.styleable.ContactUsView_dk_emailHint);
-        mSubjectHint = ta.getString(R.styleable.ContactUsView_dk_subjectHint);
         mFeedbackHint = ta.getString(R.styleable.ContactUsView_dk_feedbackHint);
         ta.recycle();
         init();
@@ -123,9 +108,6 @@ public class ContactUsView extends LinearLayout {
     private void init() {
         setOrientation(VERTICAL);
         LayoutInflater.from(getContext()).inflate(R.layout.contact_us_view, this, true);
-        mUserName = (EditText) findViewById(R.id.user_name);
-        mUserEmail = (EditText) findViewById(R.id.user_email);
-        mUserSubject = (EditText) findViewById(R.id.user_subject);
         mUserFeedback = (EditText) findViewById(R.id.user_feedback);
 
         if (getContext() instanceof BrandProvider) {
@@ -143,54 +125,10 @@ public class ContactUsView extends LinearLayout {
     }
 
     private void setInitialFieldValues() {
-        mUserName.setHint(mNameHint);
-        mUserName.setText(mName);
-        mUserEmail.setHint(mEmailHint);
-        mUserSubject.setText(mSubject);
-        mUserSubject.setHint(mSubjectHint);
         mUserFeedback.setHint(mFeedbackHint);
     }
 
     private void setupListeners() {
-
-        // show user name if enabled
-        if (mUserNameEnabled) {
-            mUserName.addTextChangedListener(new TextWatcherAdapter() {
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    mName = s.toString().trim();
-                }
-            });
-        } else {
-            mUserName.setVisibility(View.GONE);
-        }
-
-        // show email if we don't have one from the identity
-        if (TextUtils.isEmpty(mEmail)) {
-            mUserEmail.addTextChangedListener(new TextWatcherAdapter() {
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    mEmail = s.toString().trim();
-                    checkForm();
-                }
-            });
-        } else {
-            mUserEmail.setVisibility(View.GONE);
-        }
-
-        // show subject if enabled
-        if (mUserSubjectEnabled) {
-            mUserSubject.addTextChangedListener(new TextWatcherAdapter() {
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    mSubject = s.toString().trim();
-                    checkForm();
-                }
-            });
-        } else {
-            mUserSubject.setVisibility(View.GONE);
-        }
-
         mUserFeedback.addTextChangedListener(new TextWatcherAdapter() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -201,24 +139,8 @@ public class ContactUsView extends LinearLayout {
     }
 
     private void setInitialFocus() {
-        final EditText focusField;
-
-        // get the first visible empty field
-        if (View.VISIBLE == mUserName.getVisibility()
-                && TextUtils.isEmpty(mUserName.getText())) {
-            focusField = mUserName;
-        } else if (View.VISIBLE == mUserEmail.getVisibility()
-                && TextUtils.isEmpty(mUserEmail.getText())) {
-            focusField = mUserEmail;
-        } else if (View.VISIBLE == mUserSubject.getVisibility()
-                && TextUtils.isEmpty(mUserSubject.getText())) {
-            focusField = mUserSubject;
-        } else {
-            focusField = mUserFeedback;
-        }
-
         // request focus
-        focusField.requestFocus();
+        mUserFeedback.requestFocus();
     }
 
     /**
@@ -271,8 +193,6 @@ public class ContactUsView extends LinearLayout {
 
     private void checkConfig(ContactUsConfig config) {
         mSubject = mIsBranded ? config.getSubject(mBrandId) : config.getSubject();
-        mUserSubjectEnabled = mIsBranded ? config.isSubjectEnabled(mBrandId) : config.isSubjectEnabled();
-        mUserNameEnabled = mIsBranded ? config.isUserNameEnabled(mBrandId) : config.isUserNameEnabled();
         mCustomFieldProperties = mIsBranded ? config.getCustomFieldProperties(mBrandId) : config.getCustomFieldProperties();
     }
 

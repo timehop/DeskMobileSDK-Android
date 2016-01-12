@@ -53,4 +53,8 @@
     <string name="def_create_case_success_toast">Your message was submitted. Thank you!</string>
     <string name="def_create_case_error_toast">We were unable to submit your message at this time. Please try again later.</string>
 
+    <string name="contact_us_problem">What are you having\na problem for?</string>
+    <string name="contact_us_question">What is your question?</string>
+    <string name="contact_us_send_text">Send</string>
+
 </resources>

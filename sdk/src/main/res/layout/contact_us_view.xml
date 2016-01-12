@@ -26,32 +26,22 @@
   -->
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <EditText
-        android:id="@+id/user_name"
-        style="?attr/dk_contactUsEditTextStyle"
+    <TextView
+        android:id="@+id/contact_us_label_problem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:inputType="textPersonName|textCapWords"
-        android:singleLine="true"/>
+        android:text="@string/contact_us_problem"/>
 
-    <EditText
-        android:id="@+id/user_email"
-        style="?attr/dk_contactUsEditTextStyle"
+    <Spinner
+        android:id="@+id/contact_us_topics"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:inputType="textEmailAddress"
-        android:singleLine="true"/>
+        android:layout_height="wrap_content"/>
 
-    <EditText
-        android:id="@+id/user_subject"
-        style="?attr/dk_contactUsEditTextStyle"
+    <TextView
+        android:id="@+id/contact_us_label_question"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:inputType="textCapWords"
-        android:singleLine="true"/>
+        android:text="@string/contact_us_question"/>
 
     <EditText
         android:id="@+id/user_feedback"
@@ -60,5 +50,11 @@
         android:layout_height="wrap_content"
         android:inputType="textMultiLine|textCapSentences"
         android:singleLine="false"/>
+
+    <Button
+        android:id="@+id/contact_us_send_feedback"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/contact_us_send_text"/>
 
 </merge>
